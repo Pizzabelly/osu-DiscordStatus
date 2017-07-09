@@ -1,0 +1,11 @@
+<settings>
+  <Authentication>
+    <email></email>
+    <password></password>
+  </Authentication>
+  <General>
+    <update>
+		1000
+	</update>
+  </General>
+</settings>
