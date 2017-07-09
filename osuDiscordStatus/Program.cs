@@ -12,16 +12,10 @@ namespace osuDiscordStatus
 {
     class Program
     {
-        XmlDocument settingsXml = new XmlDocument();
-        public int update = 1000;
-        static String windowTitle = null;
-        static String nowPlaying = null;
-        private DiscordClient _client;
-        private String discordGame = null;
-        private String previousGame = null;
-        private String email = null;
-        private String password = null;
-        static Process osuProcess = null;
+        DiscordClient _client;
+        String discordGame;
+        static Process osuProcess;
+        String previousGame = null;  
         static void Main(string[] args) => new Program().Start();
 
         static string getNowPlaying()
@@ -30,18 +24,12 @@ namespace osuDiscordStatus
             if (process.Length > 0)
             {
                 osuProcess = process[0];
-
-                windowTitle = osuProcess.MainWindowTitle;
+                string windowTitle = osuProcess.MainWindowTitle;
 
                 if (windowTitle.IndexOf("-") == -1)
-                {
                     return ("Selecting song...");
-                }
                 else
-                {
-                    nowPlaying = windowTitle.Substring(windowTitle.IndexOf('-') + 2);
-                    return (nowPlaying);
-                }
+                    return (windowTitle.Substring(windowTitle.IndexOf('-') + 2));
             }
             else
             {
@@ -52,19 +40,21 @@ namespace osuDiscordStatus
         }
         public void Start()
         {
+            XmlDocument settingsXml = new XmlDocument();
             settingsXml.Load("settings.xml");
             XmlNodeList clientEmail = settingsXml.GetElementsByTagName("email");
             XmlNodeList clientPassword = settingsXml.GetElementsByTagName("password");
             XmlNodeList updateRate = settingsXml.GetElementsByTagName("update");
-            email = clientEmail[0].InnerText.Trim();
-            password = clientPassword[0].InnerText.Trim();
+
+            string email = clientEmail[0].InnerText.Trim();
+            string password = clientPassword[0].InnerText.Trim();
+
             _client = new DiscordClient();
             if (email.IndexOf("@") > -1)
             {
                 _client.ExecuteAndWait(async () =>
                 {
                     await _client.Connect(email, password);
-
                     while (true)
                     {
                         Thread.Sleep(Convert.ToInt32(updateRate[0].InnerText.Trim()));
@@ -80,10 +70,9 @@ namespace osuDiscordStatus
             }
             else
             {
-                Console.WriteLine("email not found");
+                Console.WriteLine("Email Not Found");
                 Console.ReadKey();
             }
-
         }
     }
 }
