@@ -1,3 +1,4 @@
+*DEPRICIATED:*  not only does the official osu! client support this but the Discord API usage in this is now considered against TOS
 # osu-DiscordStatus                                                                                                                 
 Display the current song you are playing in osu! on your discord                                                                    
                                                                                                                                     
